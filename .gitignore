@@ -1,0 +1,11 @@
+**/build/
+*.cooja
+*.o
+*.d
+*.elf
+*.bin
+*.testlog
+*.runner.log
+__pycache__/
+*.pyc
+.DS_Store
