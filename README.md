@@ -296,3 +296,11 @@ Université Chouaïb Doukkali, Morocco.
 - [6LoWPAN — RFC 4944](https://www.rfc-editor.org/rfc/rfc4944)
 - [Contiki-NG Documentation](https://docs.contiki-ng.org/)
 - [Contiki-NG GitHub](https://github.com/contiki-ng/contiki-ng)
+
+## Third-Party Attribution
+
+Some application examples are based on Contiki-NG / Contiki OS.
+Original copyright notices remain in their respective source files.
+
+See [Third-Party Notices](THIRD_PARTY_NOTICES.md) for
+upstream attribution and licensing information.
