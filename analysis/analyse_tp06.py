@@ -2,10 +2,23 @@
 import re
 import csv
 import statistics
+import argparse
 from pathlib import Path
 
-folder = Path(__file__).resolve().parent
-logfile = folder / "tp06_logs.txt"
+parser = argparse.ArgumentParser(
+    description="Analyze TP06 CoAP performance logs"
+)
+parser.add_argument("--log", type=Path, required=True)
+parser.add_argument("--output", type=Path, required=True)
+args = parser.parse_args()
+
+logfile = args.log.expanduser().resolve()
+output = args.output.expanduser().resolve()
+
+if not logfile.is_file():
+    parser.error(f"Log file not found: {logfile}")
+
+output.parent.mkdir(parents=True, exist_ok=True)
 
 tx = set()
 rx = set()
@@ -59,7 +72,7 @@ if rtts:
     print(f"RTT moyen: {statistics.mean(rtts):.2f} ms")
     print(f"RTT median: {statistics.median(rtts):.2f} ms")
 
-with (folder / "tp06_messages.csv").open("w", newline="") as f:
+with output.open("w", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
     writer.writerow([
         "node_id", "seq", "server_received",
@@ -73,4 +86,4 @@ with (folder / "tp06_messages.csv").open("w", newline="") as f:
             ack.get(key, "")
         ])
 
-print("CSV saved: tp06_messages.csv")
+print(f"CSV saved: {output}")

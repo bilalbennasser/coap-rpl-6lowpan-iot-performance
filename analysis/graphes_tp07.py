@@ -5,8 +5,23 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 
 folder = Path(__file__).resolve().parent
+repo = folder.parent
 
-with (folder / "tp07_runs.csv").open() as f:
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--output-dir",
+    type=Path,
+    default=repo / "results" / "figures"
+)
+args = parser.parse_args()
+
+args.output_dir.mkdir(parents=True, exist_ok=True)
+
+csv_file = repo / "results" / "csv" / "tp07_runs.csv"
+
+with csv_file.open(newline="", encoding="utf-8") as f:
     rows = list(csv.DictReader(f))
 
 metrics = [
@@ -52,7 +67,7 @@ for key, ylabel, filename in metrics:
     plt.grid(alpha=0.25)
     plt.tight_layout()
 
-    plt.savefig(folder / filename, dpi=200)
+    plt.savefig(args.output_dir / filename, dpi=200)
     plt.close()
 
     print("Created:", filename)

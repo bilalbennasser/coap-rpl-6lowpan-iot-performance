@@ -3,7 +3,22 @@ from statistics import mean, stdev
 import csv
 import re
 
-out = Path("results/tp08")
+import argparse
+
+parser = argparse.ArgumentParser(
+    description="TP08 preliminary analysis (Q1 and Q2 only)"
+)
+parser.add_argument("--logs-dir", type=Path, required=True)
+parser.add_argument("--output-dir", type=Path, required=True)
+args = parser.parse_args()
+
+logs_dir = args.logs_dir.expanduser().resolve()
+out = args.output_dir.expanduser().resolve()
+
+if not logs_dir.is_dir():
+    parser.error(f"Logs directory not found: {logs_dir}")
+
+out.mkdir(parents=True, exist_ok=True)
 seeds = (12345, 23456, 34567)
 rows = []
 
@@ -16,7 +31,7 @@ for mode in ("CON", "NON"):
     for quality in ("Q1", "Q2"):
         for seed in seeds:
             name = f"TP08_{mode}_{quality}_seed{seed}"
-            path = out / f"{name}.log"
+            path = logs_dir / f"{name}.log"
 
             if not path.is_file():
                 raise SystemExit(f"LOG MANQUANT: {path}")

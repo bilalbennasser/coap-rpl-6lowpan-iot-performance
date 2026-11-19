@@ -6,7 +6,22 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-out = Path("results/tp08")
+import argparse
+
+parser = argparse.ArgumentParser(
+    description="Analyze TP08 CoAP CON/NON experiments"
+)
+parser.add_argument("--logs-dir", type=Path, required=True)
+parser.add_argument("--output-dir", type=Path, required=True)
+args = parser.parse_args()
+
+logs_dir = args.logs_dir.expanduser().resolve()
+out = args.output_dir.expanduser().resolve()
+
+if not logs_dir.is_dir():
+    parser.error(f"Logs directory not found: {logs_dir}")
+
+out.mkdir(parents=True, exist_ok=True)
 pattern = re.compile(
     r"TEMP_(TX|RX|ACK)\s+id=(\d+)[, ]+seq=(\d+)"
 )
@@ -17,7 +32,7 @@ for quality in ("Q1", "Q2", "Q3"):
     for mode in ("CON", "NON"):
         for seed in (12345, 23456, 34567):
             name = f"TP08_{mode}_{quality}_seed{seed}"
-            path = out / f"{name}.log"
+            path = logs_dir / f"{name}.log"
 
             if not path.exists():
                 raise SystemExit(f"LOG MANQUANT: {path}")

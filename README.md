@@ -304,3 +304,9 @@ Original copyright notices remain in their respective source files.
 
 See [Third-Party Notices](THIRD_PARTY_NOTICES.md) for
 upstream attribution and licensing information.
+
+## Reproducing the Results
+
+The published analysis can be regenerated from Cooja logs using the Python scripts.
+
+See the [Reproduction Guide](docs/REPRODUCIBILITY.md) for commands, data availability and validation details.

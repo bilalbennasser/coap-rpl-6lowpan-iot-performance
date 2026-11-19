@@ -2,9 +2,27 @@
 import csv
 import re
 import statistics
+import argparse
 from pathlib import Path
 
-folder = Path(__file__).resolve().parent
+parser = argparse.ArgumentParser(
+    description="Analyze TP07 CoAP scalability experiments"
+)
+parser.add_argument(
+    "--logs-dir", type=Path, required=True
+)
+parser.add_argument(
+    "--output-dir", type=Path, required=True
+)
+args = parser.parse_args()
+
+logs_dir = args.logs_dir.expanduser().resolve()
+output_dir = args.output_dir.expanduser().resolve()
+
+if not logs_dir.is_dir():
+    parser.error(f"Logs directory not found: {logs_dir}")
+
+output_dir.mkdir(parents=True, exist_ok=True)
 
 pattern = re.compile(
     r"\bTEMP_(TX|RX|ACK|TIMEOUT|ERROR)"
@@ -14,7 +32,7 @@ pattern = re.compile(
 runs = []
 per_node = []
 
-for file in sorted(folder.glob("S[123]_seed*.log")):
+for file in sorted(logs_dir.glob("S[123]_seed*.log")):
     name = re.fullmatch(r"S([123])_seed(\d+)", file.stem)
 
     if not name:
@@ -124,7 +142,7 @@ for filename, rows in [
     ("tp07_per_node.csv", per_node)
 ]:
     if rows:
-        with (folder / filename).open(
+        with (output_dir / filename).open(
             "w", newline=""
         ) as f:
             writer = csv.DictWriter(
